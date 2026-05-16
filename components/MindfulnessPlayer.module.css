@@ -1,0 +1,345 @@
+/* --- FUNDO DA PÁGINA --- */
+.pageContainer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: url("https://64.media.tumblr.com/12d2a1fb27beb5bcc4d8c93d834ee9d9/04801380bf115da1-40/s1280x1920/b956b0f0a664d7ebb4b25992f055099b9537e846.jpg") no-repeat center center fixed;
+  background-size: cover;
+  z-index: 0;
+}
+
+.bgOverlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(40deg, rgba(15,33,181,0.6) 44%, rgba(154,143,227,0.8) 100%);
+  opacity: 0.8;
+  z-index: 1;
+}
+
+/* --- O PLAYER --- */
+.playerWrapper {
+  position: absolute;
+  top: 52%; left: 50%; 
+  transform: translate(-50%, -50%);
+  width: 100%;            
+  max-width: 700px;      
+  height: 85vh;          
+  max-height: 55.5rem;     
+  border-radius: 2rem;
+  overflow: hidden;
+  z-index: 10;
+  background: none; 
+  background-size: cover;
+  border: 0px solid rgba(255,255,255,0.15); 
+}
+
+/* --- AJUSTES MOBILE --- */
+@media (max-width: 600px) {
+  .playerWrapper {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    top: 50%;
+  }
+
+  /* Toolbar desce para não bater no menu do site */
+  .toolbar {
+    padding-top: 70px !important; 
+    padding-right: 30px !important; 
+    padding-left: 30px !important;
+  }
+
+  .playerView > div:nth-child(1) {
+    margin-top: 16vh !important; 
+    transform: translateY(50px) !important; 
+  }
+}
+
+.playerGlass {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(20, 20, 50, 0.30); 
+  backdrop-filter: blur(2px); 
+  z-index: 0;
+}
+
+/* --- TOOLBAR ATUALIZADA --- */
+.toolbar {
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  width: 100%;
+  padding: 25px;
+  display: flex; 
+  justify-content: flex-end; /* Alinha os botões à direita */
+  gap: 10px;
+  z-index: 100;
+}
+
+.iconBtn {
+  background: rgba(255,255,255,0.1); 
+  border: none; 
+  color: #ffffff;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  font-size: 1.2rem; 
+  cursor: pointer; 
+  transition: all 0.3s ease;
+}
+.iconBtn:hover { background: rgba(255,255,255,0.2); }
+
+/* Classe para trocar os botões i e X */
+.btn-hidden {
+  display: none !important;
+}
+
+/* --- VISTA LISTA --- */
+.playlistView {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  padding: 80px 10px 20px; 
+  display: flex; flex-direction: column;
+  z-index: 20;
+  transition: opacity 0.4s ease;
+}
+
+.listTitle {
+  color: #ffffff; font-size: 1.5rem; text-align: center; margin-bottom: 5px; font-weight: bold;
+}
+.listSub {
+  color: #ffffff; text-align: center; margin-bottom: 20px; opacity: 0.8;
+}
+
+/* SELETOR DE SEMANAS */
+.weekSelector {
+  display: flex; 
+  gap: 10px; 
+  margin-bottom: 20px;
+  padding: 0 10px 10px 10px; 
+  overflow-x: auto; 
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch; 
+  justify-content: flex-start; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+}
+.weekSelector::-webkit-scrollbar { display: none; }
+
+.weekBtn {
+  background: transparent; border: 1px solid rgba(255,255,255,0.4);
+  color: white; padding: 8px 16px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase;
+  flex-shrink: 0; 
+  transition: all 0.2s;
+}
+.weekBtn.activeTab { background: white; color: #4C38A3; border-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+
+/* --- ESTILIZAÇÃO DA SCROLLBAR (Edge, Chrome, Safari) --- */
+
+/* 1. Define a largura da barra */
+.listScroll::-webkit-scrollbar {
+  width: 6px; /* Mais fina para ser elegante */
+}
+
+/* 2. O fundo da barra (Track) - Mantemos transparente ou quase invisível */
+.listScroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-block: 10px; /* Dá um pequeno respiro no topo e fundo */
+}
+
+/* 3. O marcador que desliza (Thumb) */
+.listScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); /* Branco semi-transparente */
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Reflexo subtil */
+  transition: background 0.3s ease;
+}
+
+/* 4. Cor ao passar o rato ou clicar */
+.listScroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.listScroll::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* --- AJUSTE NA CLASSE EXISTENTE --- */
+.listScroll { 
+  overflow-y: auto; 
+  flex: 1; 
+  padding-right: 8px; /* Aumentado ligeiramente para a barra não colar no conteúdo */
+  
+  /* Suporte para Firefox (apesar de pedires para Edge) */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+/* LIST ITEM */
+.listItem {
+  display: grid; 
+  grid-template-columns: 50px 1fr 50px; 
+  align-items: center; gap: 10px;
+  margin-bottom: 8px; padding: 15px 10px;
+  border-radius: 12px; cursor: pointer;
+  background: linear-gradient(40deg, rgba(101,73,149,0.3) 44%, rgba(53,62,194,0.4) 82%);
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.listItem:hover { background: linear-gradient(45deg, rgba(82,94,227,1) 35%, rgba(58,184,234,1) 100%) !important;
+  color: #ffffff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.3); }
+.listItem.active {
+  background: linear-gradient(45deg, rgba(82,94,227,1) 35%, rgba(58,184,234,1) 100%) !important;
+  color: #ffffff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.itemNumber {
+  width: 35px; height: 35px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; justify-self: start; margin-left: 5px;
+}
+.listItem.active .itemNumber { border: 2px solid #ffffff; background: #ffffff; color: #4C38A3; font-weight: bold; }
+
+.itemInfo { display: flex; flex-direction: column; overflow: hidden; text-align: center; }
+.itemTitle { font-size: 0.95rem; font-weight: 500; color: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.itemSub { font-size: 0.7rem; opacity: 0.7; text-transform: uppercase; margin-top: 2px; }
+
+.itemRight { display: flex; flex-direction: column; align-items: center; justify-self: end; margin-right: 5px; }
+.lockIcon { font-size: 1rem; opacity: 0.6; margin-bottom: 2px; }
+.itemDuration { font-size: 0.65rem; opacity: 0.8; font-family: monospace; }
+
+/* --- VISTA PLAYER --- */
+.playerView {
+  position: absolute; top: 0; left: 0; width: 100%; 
+  height: calc(100% - 160px) !important; 
+  display: flex; flex-direction: column; align-items: center;
+  z-index: 10; transition: opacity 0.4s ease;
+  padding-bottom: 0 !important; 
+}
+
+.playerView > div:nth-child(1) {
+  padding-top: 0 !important; 
+  margin-top: 8vh !important;
+}
+
+.playerView > div:nth-child(2) {
+  margin: auto !important; 
+}
+
+.trackInfo { text-align: center; margin-top: 3rem; margin-bottom: 1rem; width: 80%; z-index: 5; }
+.trackTitle { font-size: 1.6rem; font-weight: bold; margin-bottom: 5px; color: #ffffff !important; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.trackMeta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; color: #ffffff !important; }
+
+.coverWrapper {
+  position: relative; width: 250px; height: 250px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: auto;
+}
+.coverImage {
+  width: 220px; height: 220px; border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.2);
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+  overflow: hidden; background: black;
+  animation: spin 30s linear infinite;
+}
+.pausedAnim { animation-play-state: paused; }
+.coverImage img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* WAVEFORM */
+.waveform {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 240px; height: 240px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; gap: 4px; z-index: 10; pointer-events: none;
+}
+.waveBar { width: 5px; background: rgba(255,255,255,0.8); border-radius: 3px; height: 10px; transition: height 0.1s; }
+.waveActive .waveBar { animation: waveAnim 1s ease-in-out infinite; }
+.waveBar:nth-child(1) { animation-delay: 0.1s; }
+.waveBar:nth-child(2) { animation-delay: 0.2s; }
+.waveBar:nth-child(3) { animation-delay: 0.3s; }
+.waveBar:nth-child(4) { animation-delay: 0.4s; }
+.waveBar:nth-child(5) { animation-delay: 0.5s; }
+@keyframes waveAnim { 0%,100% { height: 10px; opacity: 0.5; } 50% { height: 60px; opacity: 1; } }
+
+/* --- CONTROLOS GLASS --- */
+.glassControls {
+  position: absolute; bottom: 0; width: 100%; height: 150px;
+  background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px);
+  border-top: 1px solid rgba(255,255,255,0.2);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 40px; z-index: 30;
+}
+
+.progressBar { width: 100%; height: 5px; background: rgba(0,0,0,0.3); border-radius: 5px; cursor: pointer; position: relative; margin-bottom: 8px; }
+.progressFill { height: 100%; background: #a3a18f; border-radius: 5px; }
+.progressHandle {
+  width: 12px; height: 12px; background: #ffffff; border-radius: 50%;
+  position: absolute; right: -6px; top: -3.5px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.timeRow { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: bold; color: rgba(255,255,255,0.9); margin-bottom: 15px; font-family: monospace; }
+
+.controlsRow { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; }
+
+.ctrlBtn {
+  display: flex; flex-direction: column; align-items: center;
+  background: none; border: none; color: #ffffff;
+  font-size: 0.65rem; font-weight: bold; cursor: pointer; opacity: 0.9;
+}
+.ctrlBtn:hover { transform: scale(1.1); opacity: 1; }
+
+.playBtnLarge {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: #ffffff; color: #4C38A3;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; border: none; cursor: pointer;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  transition: transform 0.1s; margin: 0 10px;
+}
+.playBtnLarge:active { transform: scale(0.95); }
+
+/* UTILITÁRIOS */
+.hidden { opacity: 0; pointer-events: none; z-index: -1; }
+.visible { opacity: 1; pointer-events: auto; z-index: 20; }
+
+.bgOverlay00 {
+  position: fixed; 
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+.infoModal {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 1s ease, transform 1s ease;
+  background: linear-gradient(180deg, #4c4ed4 0%, #1e1f5e 100%);
+  padding: 100px 30px 40px;
+}
+
+.infoHidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.infoVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+

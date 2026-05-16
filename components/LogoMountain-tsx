@@ -1,0 +1,15 @@
+// components/LogoMountain.jsx
+import { Mountain } from 'lucide-react';
+
+export default function LogoMountain() {
+  return (
+    <div 
+      className="flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
+      style={{
+        background: 'linear-gradient(135deg, #4bc2fe 0%, #4b2dbb 100%)',
+      }}
+    >
+      <Mountain size={18} strokeWidth={1.5} color="white" />
+    </div>
+  );
+}

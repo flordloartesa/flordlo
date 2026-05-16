@@ -1,0 +1,42 @@
+/* Container principal */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 300;
+}
+
+/* Título: Passou de 72px para 50px */
+.courseTitle {
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 1.1;
+  color: #1e1b4b; /* Indigo profundo */
+  margin-bottom: 20px;
+}
+
+/* Texto descritivo: Passou de 20px para 16px */
+.courseDescription {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #4b5563;
+  max-width: 750px;
+}
+
+/* --- RESPONSIVIDADE (Mobile Friendly) --- */
+@media (max-width: 768px) {
+  .courseTitle {
+    font-size: 32px; /* Redução proporcional para telemóvel */
+  }
+  
+  .courseDescription {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .container {
+    padding: 40px 15px;
+  }
+}

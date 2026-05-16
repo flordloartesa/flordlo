@@ -1,0 +1,63 @@
+{
+  "name": "flordlo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@auth/mongodb-adapter": "^3.11.1",
+    "@next/third-parties": "^16.2.1",
+    "@opennextjs/cloudflare": "^1.17.1",
+    "@paypal/react-paypal-js": "^8.9.2",
+    "@portabletext/react": "^6.2.0",
+    "@react-pdf/renderer": "^4.5.1",
+    "@sanity/image-url": "^2.0.3",
+    "@stripe/stripe-js": "^8.7.0",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.38.0",
+    "googleapis": "^171.4.0",
+    "lucide-react": "^0.475.0",
+    "mongodb": "^7.1.0",
+    "next": "16.1.6",
+    "next-auth": "^4.24.13",
+    "next-auth-sanity": "^1.5.3",
+    "next-sanity": "^12.0.16",
+    "nodemailer": "6.9.13",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-hook-form": "^7.71.1",
+    "react-icons": "^5.6.0",
+    "react-player": "^3.4.0",
+    "react-portable-text": "^0.6.0",
+    "react-turnstile": "^1.1.5",
+    "recharts": "^3.8.0",
+    "resend": "^4.8.0",
+    "stripe": "^22.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/nodemailer": "6.4.14",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.24",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "5.9.3",
+    "wrangler": "^4.69.0"
+  },
+  "overrides": {
+    "nodemailer": "$nodemailer"
+  }
+}
