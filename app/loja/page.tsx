@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { client } from "@/app/lib/sanity";
 import LojaClient from "./LojaClient";
 
@@ -33,8 +34,10 @@ export default async function LojaPage() {
           </p>
         </header>
 
-        {/* Chamamos a secção interativa e passamos os produtos */}
-        <LojaClient initialProducts={products} />
+        {/* 🛡️ AQUI ESTÁ A CORREÇÃO: O componente agora está abraçado pelo Suspense */}
+        <Suspense fallback={<div className="text-center py-20 text-[#9d6b73] animate-pulse font-medium">A preparar os produtos...</div>}>
+          <LojaClient initialProducts={products} />
+        </Suspense>
 
       </div>
     </main>
