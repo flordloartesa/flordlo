@@ -293,7 +293,7 @@ export default async function DynamicPage({
             </Link>
           ) : (
             <Link 
-              href="/" 
+              href="/loja" 
               className="px-8 py-3 bg-[#9d6b73] text-white rounded-xl font-bold hover:scale-105 transition-all shadow-md shadow-rose-200 w-full sm:w-auto text-center"
             >
               Explorar Loja &rarr;

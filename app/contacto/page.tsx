@@ -112,11 +112,11 @@ export default function ContactPage() {
           </div>
 
           <div className="flex justify-center pt-2">
-            <Turnstile 
-              sitekey="0x4AAAAAACf86PyF6Af3GBY9"
-              onVerify={(token) => setTurnstileToken(token)}
-              onError={() => setStatus("error")}
-            />
+           <Turnstile 
+  sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+  onVerify={(token) => setTurnstileToken(token)}
+  onError={() => setStatus("error")}
+/>
           </div>
 
           <button
