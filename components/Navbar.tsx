@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Mail, ChevronDown, Menu, X, Search } from "lucide-react";
+import { Mail, ChevronDown, Menu, X, Search, ShoppingBag } from "lucide-react"; 
 import Link from '@/components/MyLink';
 import { usePathname } from 'next/navigation';
-//import { useSession } from "next-auth/react";
-//import UserMenu from "./UserMenu";
 import ProgressBar from './ProgressBar';
 import SearchModal from './SearchModal';
+
+// 👇 IMPORTAÇÃO DO CONTEXTO DO CARRINHO 👇
+import { useCart } from '@/app/context/CartContext'; 
 
 // --- TIPAGENS ---
 export type NavLink = {
@@ -82,17 +83,21 @@ export default function Navbar({ initialMenuData = {} }: { initialMenuData?: any
   const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
   const [safeData, setSafeData] = useState(initialMenuData);
 
+  // 👇 AGORA SIM, OS NOMES CORRETOS DO TEU CONTEXTO! 👇
+  const { cart, toggleCart } = useCart(); 
+
+  // 👇 CALCULA O TOTAL DE PRODUTOS USANDO "cart" 👇
+  const totalItems = cart?.reduce((acc: any, item: any) => acc + (item.quantity || 1), 0) || 0;
+
   useEffect(() => {
     if (initialMenuData) setSafeData(initialMenuData);
   }, [initialMenuData]);
 
   const pathname = usePathname();
-  //const { status } = useSession();
 
   const isPraticasPage = pathname?.startsWith("/praticas/");
   const isTransparent = isPraticasPage && !mobileMenuOpen;
 
-  // 🎨 NOVO GRADIENTE: Rosa Seco
   const projectGradient = 'linear-gradient(135deg, #C67F8F 0%, #C37F8B 100%)';
 
   const ctaHref = safeData.ctaButton?.href || '#';
@@ -133,11 +138,11 @@ export default function Navbar({ initialMenuData = {} }: { initialMenuData?: any
         <div className="max-w-[1200px] mx-auto flex justify-between items-center h-20 relative">
           
           <div className="flex items-center gap-10">
-            {/* Logo Meditt */}
+            {/* Logo */}
             <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
               <img 
                 src="https://64.media.tumblr.com/9bfd5a9b6fcabd796b4679706eb94bdb/b7ada38ef8913aeb-1a/s250x400/9e8009abb454d4ed251ded0bba9c8645bf1277aa.pnj" 
-                alt="Logo Meditt" 
+                alt="Logo Flordlo" 
                 className="h-10 w-auto object-contain"
               />
             </Link>
@@ -161,13 +166,29 @@ export default function Navbar({ initialMenuData = {} }: { initialMenuData?: any
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Botão de Pesquisa */}
             {safeData.displaySearch !== false && (
               <button onClick={() => setIsSearchOpen(true)} className="p-2 text-[#37374B] hover:text-[#C67F8F] transition-colors">
                 <Search size={22} />
               </button>
             )}
 
-            {/* Botão CTA com o Novo Gradiente Rosa */}
+            {/* 👇 BOTÃO DO CARRINHO A USAR O TOGGLECART 👇 */}
+            <button 
+              onClick={toggleCart} 
+              className="relative p-2 text-[#37374B] hover:text-[#C67F8F] transition-colors"
+              aria-label="Ver Carrinho de Compras"
+            >
+              <ShoppingBag size={24} strokeWidth={1.5} />
+              
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-[11px] font-bold text-white bg-[#C67F8F] rounded-full shadow-sm">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Botão CTA */}
             <button 
               onClick={() => window.location.href = ctaHref}
               className="hidden md:block text-white px-7 py-2.5 rounded-full text-sm font-bold shadow-lg hover:shadow-[#C67F8F]/30 hover:-translate-y-0.5 transition-all duration-300"
@@ -176,15 +197,8 @@ export default function Navbar({ initialMenuData = {} }: { initialMenuData?: any
               {ctaLabel}
             </button>
 
-           {/* <div className="flex items-center">
-              {status === "authenticated" ? <UserMenu /> : (
-                <Link href="/auth/signin" className="text-xs font-bold uppercase text-[#37374B] hover:text-[#C67F8F]">
-                  Entrar
-                </Link>
-              )}
-            </div> */}
-
-            <button className="lg:hidden text-[#37374B]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {/* Menu Hambúrguer (Mobile) */}
+            <button className="lg:hidden p-2 text-[#37374B]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
@@ -234,7 +248,7 @@ export default function Navbar({ initialMenuData = {} }: { initialMenuData?: any
                 )
               ))}
 
-              {/* CTA Mobile com Gradiente Rosa */}
+              {/* CTA Mobile */}
               <Link 
                 href={ctaHref} 
                 className="text-white px-6 py-3 rounded-full text-center font-bold mt-6 shadow-md block"

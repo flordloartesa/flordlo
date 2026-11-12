@@ -180,6 +180,8 @@ export async function POST(req: Request) {
     const avisoReservaHtml = eReserva ? `<div style="background-color: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 25px;"><p style="margin: 0; font-size: 14px; color: #92400e;">Este valor é apenas a reserva do retiro.</p></div>` : "";
 
     // ✅ 4. ENVIO DOS EMAILS
+    
+    // --> Email para o Cliente
     await resend.emails.send({
       from: 'Flor.d.Ló <geral@flordlo.pt>',
       replyTo: adminEmail,
@@ -229,31 +231,93 @@ export async function POST(req: Request) {
         </div>`
     });
 
+    // --> Email para o Admin (Estilo WooCommerce)
     await resend.emails.send({
       from: 'Sistema <geral@flordlo.pt>',
       to: adminEmail,
-      subject: `💰 Nova Encomenda: ${orderNumber} (€${finalAmount})`,
+      subject: `💰 Nova Encomenda: ${orderNumber} (€${finalAmount.toFixed(2)})`,
       html: `
-        <div style="font-family: sans-serif; padding: 20px;">
-          <h2 style="color: #9d6b73;">Nova Venda!</h2>
-          <p><strong>Cliente:</strong> ${nomeCompleto} (${finalEmail})</p>
-          <hr>
-          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-            ${tabelaItensHtml}
+        <div style="background-color: #FCFAFA; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #3c3c3c;">
+          
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
             <tr>
-              <td colspan="2" style="padding: 10px 8px;">Subtotal Itens:</td>
-              <td style="padding: 10px 8px; text-align: right;">€${calculatedItemsSubtotal.toFixed(2)}</td>
+              <td style="background-color: #9d6b73; padding: 35px 20px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 400; letter-spacing: 1px;">Nova Encomenda Recebida</h1>
+              </td>
             </tr>
+            
             <tr>
-              <td colspan="2" style="padding: 5px 8px;">Portes (${totalWeight > 0 ? totalWeight + 'kg' : 'Fixo'}):</td>
-              <td style="padding: 5px 8px; text-align: right;">€${shippingFee.toFixed(2)}</td>
+              <td style="padding: 30px 30px 10px;">
+                <p style="margin: 0 0 15px; font-size: 16px; line-height: 1.5;">Parabéns! Recebeste uma nova encomenda de <strong>${nomeCompleto}</strong>.</p>
+                <h2 style="color: #9d6b73; font-size: 18px; border-bottom: 2px solid #f4eff0; padding-bottom: 10px; margin-top: 30px;">[Encomenda ${orderNumber}] <span style="font-size: 14px; font-weight: normal; color: #718096;">(${dataHoje})</span></h2>
+              </td>
             </tr>
+            
             <tr>
-              <td colspan="2" style="padding: 15px 8px; font-weight: bold; border-top: 1px solid #eee;">TOTAL:</td>
-              <td style="padding: 15px 8px; text-align: right; font-weight: bold; color: #9d6b73; font-size: 18px; border-top: 1px solid #eee;">€${finalAmount.toFixed(2)}</td>
+              <td style="padding: 0 30px;">
+                 <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                   <thead>
+                     <tr>
+                        <th style="border-bottom: 2px solid #e2e8f0; padding: 12px 8px; text-align: left; color: #64748b; text-transform: uppercase; font-size: 12px;">Produto</th>
+                        <th style="border-bottom: 2px solid #e2e8f0; padding: 12px 8px; text-align: center; color: #64748b; text-transform: uppercase; font-size: 12px;">Qtd</th>
+                        <th style="border-bottom: 2px solid #e2e8f0; padding: 12px 8px; text-align: right; color: #64748b; text-transform: uppercase; font-size: 12px;">Preço</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                    ${tabelaItensHtml}
+                    
+                    <tr>
+                      <td colspan="2" style="padding: 15px 8px 5px; text-align: left; font-weight: bold; color: #64748b;">Subtotal:</td>
+                      <td style="padding: 15px 8px 5px; text-align: right; font-weight: bold; color: #3c3c3c;">€${calculatedItemsSubtotal.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="padding: 5px 8px; text-align: left; font-weight: bold; color: #64748b;">Portes (${totalWeight > 0 ? totalWeight + 'kg' : 'Fixo'}):</td>
+                      <td style="padding: 5px 8px; text-align: right; font-weight: bold; color: #3c3c3c;">€${shippingFee.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="padding: 20px 8px; text-align: left; font-weight: bold; color: #9d6b73; font-size: 18px; border-top: 2px solid #f4eff0;">Total a Receber:</td>
+                      <td style="padding: 20px 8px; text-align: right; font-weight: bold; color: #9d6b73; font-size: 18px; border-top: 2px solid #f4eff0;">€${finalAmount.toFixed(2)}</td>
+                    </tr>
+                   </tbody>
+                 </table>
+              </td>
             </tr>
+            
+            <tr>
+              <td style="padding: 10px 30px 30px;">
+                <h2 style="color: #9d6b73; font-size: 18px; border-bottom: 2px solid #f4eff0; padding-bottom: 10px; margin-bottom: 20px;">Detalhes do Cliente</h2>
+                
+                <div style="background-color: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eaeaea;">
+                  <table style="width: 100%; font-size: 14px; line-height: 1.8;">
+                    <tr>
+                      <td style="width: 100px; color: #64748b; font-weight: bold;">Nome:</td>
+                      <td style="color: #3c3c3c;">${nomeCompleto}</td>
+                    </tr>
+                    <tr>
+                      <td style="color: #64748b; font-weight: bold;">E-mail:</td>
+                      <td><a href="mailto:${finalEmail}" style="color: #9d6b73; text-decoration: none; font-weight: bold;">${finalEmail}</a></td>
+                    </tr>
+                    <tr>
+                      <td style="color: #64748b; font-weight: bold;">Telemóvel:</td>
+                      <td style="color: #3c3c3c;">${formData.phone || '<span style="color: #94a3b8; font-style: italic;">Não fornecido</span>'}</td>
+                    </tr>
+                    <tr>
+                      <td style="color: #64748b; font-weight: bold;">NIF:</td>
+                      <td style="color: #3c3c3c;">${formData.nif || '<span style="color: #94a3b8; font-style: italic;">Consumidor Final</span>'}</td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            
+            <tr>
+              <td style="background-color: #f8f9fa; padding: 30px; text-align: center; border-top: 1px solid #eaeaea;">
+                <a href="https://flordlo.pt/studio" style="background-color: #9d6b73; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;">Abrir no Sanity Studio</a>
+              </td>
+            </tr>
+            
           </table>
-          <p><a href="https://flordlo.pt/studio">Abrir no Sanity Studio</a></p>
         </div>`
     });
 

@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Flor de Ló - Flores & Presentes",
-  description: "Arranjos florais únicos e feitos com amor.",
+  description: "Decoração & Arranjos florais únicos e feitos com amor - para casamentos e eventos.",
 };
 
 async function getNavigation() {

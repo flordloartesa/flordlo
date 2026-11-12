@@ -7,6 +7,36 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    // ---------------------------------------------------------
+    // 1. VALIDAÇÃO CLOUDFLARE TURNSTILE
+    // ---------------------------------------------------------
+    // O nome 'turnstileToken' deve coincidir com a chave que está a enviar do frontend.
+    // Pode também vir por defeito como 'cf-turnstile-response' dependendo da sua implementação.
+    const token = body.turnstileToken || body['cf-turnstile-response'];
+
+    if (!token) {
+      return NextResponse.json({ error: "Token de segurança em falta." }, { status: 400 });
+    }
+
+    const verifyForm = new URLSearchParams();
+    verifyForm.append('secret', process.env.TURNSTILE_SECRET_KEY as string);
+    verifyForm.append('response', token);
+
+    const turnstileRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: verifyForm,
+    });
+
+    const turnstileData = await turnstileRes.json();
+
+    if (!turnstileData.success) {
+      console.error("Falha Turnstile:", turnstileData['error-codes']);
+      return NextResponse.json({ error: "Falha na validação de segurança (Bot detetado)." }, { status: 400 });
+    }
+
+    // ---------------------------------------------------------
+    // 2. CONFIGURAÇÃO NODEMAILER (Se passar a validação)
+    // ---------------------------------------------------------
     const transporter = createTransport({
       host: process.env.EMAIL_SERVER_HOST,
       port: Number(process.env.EMAIL_SERVER_PORT),
@@ -18,7 +48,7 @@ export async function POST(req: Request) {
     });
 
     // ---------------------------------------------------------
-    // LAYOUT TIPO WORDPRESS PARA O ADMIN (SEM A BARRA "/")
+    // 3. LAYOUT TIPO WORDPRESS PARA O ADMIN
     // ---------------------------------------------------------
     const adminEmailHtml = `
     <div style="background-color: #f0f0f1; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif; color: #3c434a;">
@@ -59,11 +89,10 @@ export async function POST(req: Request) {
     `;
 
     // ---------------------------------------------------------
-    // ENVIAR O EMAIL
+    // 4. ENVIAR O EMAIL
     // ---------------------------------------------------------
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
-      // 👇 AQUI ESTÁ A LER DIRETAMENTE DO TEU .ENV.LOCAL 👇
       to: process.env.ADMIN_EMAIL, 
       subject: `Novo Contacto: ${body.subject || 'Mensagem do Site'}`,
       html: adminEmailHtml, 
